@@ -18,6 +18,7 @@ struct PlayerView: View {
 
     var body: some View {
         ZStack {
+            Color.black.ignoresSafeArea() // solid base so the Decide screen doesn't show through
             ArtworkView(film: film, symbolSize: 260)
                 .ignoresSafeArea()
                 .overlay(Color.black.opacity(0.35).ignoresSafeArea())
