@@ -44,7 +44,7 @@ struct PlayerView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     Text(film.title).font(.title2.bold())
                     ProgressView(value: position, total: duration)
-                        .tint(.white)
+                        .tint(Theme.accent)
                     HStack {
                         Text(format(position))
                         Spacer()

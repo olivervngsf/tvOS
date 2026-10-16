@@ -12,19 +12,26 @@ struct DecideView: View {
     private enum Field { case play, more }
 
     var body: some View {
-        HStack(alignment: .top, spacing: 70) {
-            ArtworkView(film: film, symbolSize: 180)
-                .frame(width: 560, height: 760)
-                .clipShape(RoundedRectangle(cornerRadius: 24))
+        ZStack {
+            BackdropView(film: film)
 
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 20) {
+                Wordmark()
+                Spacer()
+
+                Text(film.mood.heading.uppercased())
+                    .font(.caption.bold())
+                    .kerning(2)
+                    .foregroundStyle(Theme.accent)
                 Text(film.title)
-                    .font(.largeTitle.bold())
-                Text(film.metaLine)
-                    .font(.title3)
-                    .foregroundStyle(.secondary)
+                    .font(.system(size: 96, weight: .black))
+                FilmMetaRow(film: film)
                 Text(film.summary)
-                    .font(.body)
+                    .font(.title3)
+                    .frame(maxWidth: 900, alignment: .leading)
+                Text(film.tags)
+                    .font(.callout)
+                    .foregroundStyle(.white.opacity(0.7))
 
                 HStack(spacing: 30) {
                     Button {
@@ -32,7 +39,6 @@ struct DecideView: View {
                         playing = true
                     } label: {
                         Label("Play", systemImage: "play.fill")
-                            .padding(.horizontal, 30)
                     }
                     .focused($focused, equals: .play)
 
@@ -44,21 +50,26 @@ struct DecideView: View {
                     }
                     .focused($focused, equals: .more)
                 }
+                .buttonStyle(PillButtonStyle())
                 .padding(.top, 20)
 
                 // More info expands in place: no extra screen to navigate.
                 if showMore {
-                    Text(film.details)
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                        .transition(.opacity.combined(with: .move(edge: .top)))
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Starring: \(film.starring)")
+                        Text("Director: \(film.director)")
+                        Text("Genre: \(film.genre) · Rated \(film.rating) · \(film.runtime)")
+                    }
+                    .font(.callout)
+                    .foregroundStyle(.white.opacity(0.8))
+                    .padding(28)
+                    .background(.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 16))
+                    .transition(.opacity.combined(with: .move(edge: .bottom)))
                 }
-
-                Spacer()
             }
-            .frame(maxWidth: 900, alignment: .leading)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .padding(.bottom, 20)
         }
-        .padding(80)
         .defaultFocus($focused, .play)
         .fullScreenCover(isPresented: $playing) {
             PlayerView(film: film, foundIn: foundIn)

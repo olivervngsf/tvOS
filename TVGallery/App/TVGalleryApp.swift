@@ -16,6 +16,8 @@ struct TVGalleryApp: App {
                     }
             }
             .environment(clock)
+            .preferredColorScheme(.dark)
+            .tint(Theme.accent)
         }
     }
 }

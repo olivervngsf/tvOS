@@ -23,6 +23,15 @@ enum Mood: String, CaseIterable, Identifiable, Hashable {
         }
     }
 
+    /// One-line hint under the mood label.
+    var subtitle: String {
+        switch self {
+        case .relaxing: "Calm, cozy, easy to watch"
+        case .laugh: "Light, funny, feel-good"
+        case .thrill: "Tense, fast, gripping"
+        }
+    }
+
     var symbol: String {
         switch self {
         case .relaxing: "moon.stars.fill"
@@ -43,11 +52,15 @@ enum Mood: String, CaseIterable, Identifiable, Hashable {
 struct Film: Identifiable, Hashable {
     var id: String { title }
     let title: String
+    let year: Int
+    let rating: String
+    let match: Int
     let minutes: Int
     let genre: String
     let mood: Mood
     let summary: String
-    let details: String
+    let starring: String
+    let director: String
     let symbol: String
     let color: Color
 
@@ -55,6 +68,9 @@ struct Film: Identifiable, Hashable {
 
     /// "1h 42m · Comedy · Relaxing"
     var metaLine: String { "\(runtime) · \(genre) · \(mood.rawValue.capitalized)" }
+
+    /// "Comedy · Relaxing"
+    var tags: String { "\(genre) · \(mood.rawValue.capitalized)" }
 }
 
 extension Film {
@@ -64,43 +80,52 @@ extension Film {
     }
 
     static let all: [Film] = [
-        Film(title: "Film A", minutes: 102, genre: "Comedy", mood: .relaxing,
+        Film(title: "Film A", year: 2024, rating: "PG", match: 98, minutes: 102,
+             genre: "Comedy", mood: .relaxing,
              summary: "A lighthearted story for a quiet evening.",
-             details: "Director: Placeholder · Cast: Placeholder, Placeholder · 2024 · PG",
+             starring: "Placeholder Actor, Placeholder Actor", director: "Placeholder Director",
              symbol: "cup.and.saucer.fill", color: .indigo),
-        Film(title: "Film B", minutes: 95, genre: "Drama", mood: .relaxing,
+        Film(title: "Film B", year: 2023, rating: "PG", match: 94, minutes: 95,
+             genre: "Drama", mood: .relaxing,
              summary: "Two friends rediscover a small seaside town.",
-             details: "Director: Placeholder · Cast: Placeholder · 2023 · PG",
+             starring: "Placeholder Actor, Placeholder Actor", director: "Placeholder Director",
              symbol: "water.waves", color: .teal),
-        Film(title: "Film C", minutes: 88, genre: "Documentary", mood: .relaxing,
+        Film(title: "Film C", year: 2022, rating: "G", match: 91, minutes: 88,
+             genre: "Documentary", mood: .relaxing,
              summary: "A slow, beautiful walk through mountain forests.",
-             details: "Narrator: Placeholder · 2022 · G",
+             starring: "Placeholder Actor, Placeholder Actor", director: "Placeholder Director",
              symbol: "leaf.fill", color: .green),
 
-        Film(title: "Film D", minutes: 97, genre: "Comedy", mood: .laugh,
+        Film(title: "Film D", year: 2024, rating: "PG-13", match: 97, minutes: 97,
+             genre: "Comedy", mood: .laugh,
              summary: "A wedding planner's worst week ever.",
-             details: "Director: Placeholder · Cast: Placeholder · 2024 · PG-13",
+             starring: "Placeholder Actor, Placeholder Actor", director: "Placeholder Director",
              symbol: "party.popper.fill", color: .orange),
-        Film(title: "Film E", minutes: 91, genre: "Comedy", mood: .laugh,
+        Film(title: "Film E", year: 2023, rating: "PG", match: 93, minutes: 91,
+             genre: "Comedy", mood: .laugh,
              summary: "A cat inherits a bakery. Chaos follows.",
-             details: "Director: Placeholder · Cast: Placeholder · 2023 · PG",
+             starring: "Placeholder Actor, Placeholder Actor", director: "Placeholder Director",
              symbol: "cat.fill", color: .pink),
-        Film(title: "Film F", minutes: 104, genre: "Animation", mood: .laugh,
+        Film(title: "Film F", year: 2024, rating: "G", match: 90, minutes: 104,
+             genre: "Animation", mood: .laugh,
              summary: "Robots try to throw a surprise party.",
-             details: "Director: Placeholder · Voices: Placeholder · 2024 · G",
+             starring: "Placeholder Actor, Placeholder Actor", director: "Placeholder Director",
              symbol: "gamecontroller.fill", color: .yellow),
 
-        Film(title: "Film G", minutes: 118, genre: "Thriller", mood: .thrill,
+        Film(title: "Film G", year: 2024, rating: "PG-13", match: 96, minutes: 118,
+             genre: "Thriller", mood: .thrill,
              summary: "One night, one train, one missing passenger.",
-             details: "Director: Placeholder · Cast: Placeholder · 2024 · PG-13",
+             starring: "Placeholder Actor, Placeholder Actor", director: "Placeholder Director",
              symbol: "tram.fill", color: .red),
-        Film(title: "Film H", minutes: 124, genre: "Sci-Fi", mood: .thrill,
+        Film(title: "Film H", year: 2023, rating: "PG-13", match: 92, minutes: 124,
+             genre: "Sci-Fi", mood: .thrill,
              summary: "A signal from deep space starts counting down.",
-             details: "Director: Placeholder · Cast: Placeholder · 2023 · PG-13",
+             starring: "Placeholder Actor, Placeholder Actor", director: "Placeholder Director",
              symbol: "sparkles", color: .purple),
-        Film(title: "Film I", minutes: 109, genre: "Action", mood: .thrill,
+        Film(title: "Film I", year: 2022, rating: "R", match: 89, minutes: 109,
+             genre: "Action", mood: .thrill,
              summary: "A getaway driver takes one last job.",
-             details: "Director: Placeholder · Cast: Placeholder · 2022 · R",
+             starring: "Placeholder Actor, Placeholder Actor", director: "Placeholder Director",
              symbol: "car.fill", color: .gray),
     ]
 }
