@@ -1,0 +1,19 @@
+name: TVGallery
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    tvOS: "17.0"
+targets:
+  TVGallery:
+    type: application
+    platform: tvOS
+    sources: [TVGallery]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.example.TVGallery
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: TV Gallery
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.9"
+        TARGETED_DEVICE_FAMILY: "3"
