@@ -1,23 +1,24 @@
 import SwiftUI
 import Combine
 
-/// Fake player to show remote handling:
+/// Fake player = end of the task. Shows how long it took to find something.
 /// click / Play-Pause = toggle, swipe left/right = seek 10s, Menu = close.
 struct PlayerView: View {
-    let item: MediaItem
+    let film: Film
+    let foundIn: Int
     @Environment(\.dismiss) private var dismiss
-    @Environment(LibraryStore.self) private var store
+    @Environment(SessionClock.self) private var clock
 
-    @State private var isPlaying = false
+    @State private var isPlaying = true
     @State private var position: Double = 0
-    @State private var hint = "Click or press Play/Pause"
+    @State private var showBadge = true
 
-    private var duration: Double { Double(item.minutes * 60) }
+    private var duration: Double { Double(film.minutes * 60) }
     private let ticker = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         ZStack {
-            ArtworkView(item: item, symbolSize: 260)
+            ArtworkView(film: film, symbolSize: 260)
                 .ignoresSafeArea()
                 .overlay(Color.black.opacity(0.35).ignoresSafeArea())
 
@@ -26,15 +27,25 @@ struct PlayerView: View {
                 .foregroundStyle(.white)
 
             VStack {
+                if showBadge {
+                    Label(
+                        "Found in \(foundIn)s · target under 60s",
+                        systemImage: foundIn < 60 ? "checkmark.circle.fill" : "clock"
+                    )
+                    .font(.title3.bold())
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 16)
+                    .background(.ultraThinMaterial, in: Capsule())
+                    .padding(.top, 60)
+                    .transition(.opacity)
+                }
                 Spacer()
                 VStack(alignment: .leading, spacing: 16) {
-                    Text(item.title).font(.title2.bold())
+                    Text(film.title).font(.title2.bold())
                     ProgressView(value: position, total: duration)
                         .tint(.white)
                     HStack {
                         Text(format(position))
-                        Spacer()
-                        Text(hint).foregroundStyle(.white.opacity(0.7))
                         Spacer()
                         Text("-" + format(duration - position))
                     }
@@ -45,32 +56,30 @@ struct PlayerView: View {
             }
         }
         .focusable()
-        .onTapGesture { togglePlay() }          // touch-surface click
-        .onPlayPauseCommand { togglePlay() }    // Play/Pause button
-        .onMoveCommand { direction in           // swipe / arrow
+        .onTapGesture { isPlaying.toggle() }          // touch-surface click
+        .onPlayPauseCommand { isPlaying.toggle() }    // Play/Pause button
+        .onMoveCommand { direction in                 // swipe / arrow
             switch direction {
             case .left: seek(-10)
             case .right: seek(10)
             default: break
             }
         }
-        .onExitCommand { dismiss() }            // Menu / Back button
+        .onExitCommand { dismiss() }                  // Menu / Back button
         .onReceive(ticker) { _ in
             guard isPlaying else { return }
             position = min(position + 1, duration)
             if position >= duration { isPlaying = false }
         }
-        .onAppear { if store.autoplay { isPlaying = true } }
-    }
-
-    private func togglePlay() {
-        isPlaying.toggle()
-        hint = isPlaying ? "Playing" : "Paused"
+        .task {
+            try? await Task.sleep(for: .seconds(4))
+            withAnimation { showBadge = false }
+        }
+        .onDisappear { clock.reset() } // next search starts a fresh timer
     }
 
     private func seek(_ seconds: Double) {
         position = min(max(position + seconds, 0), duration)
-        hint = seconds > 0 ? "+10s" : "-10s"
     }
 
     private func format(_ seconds: Double) -> String {

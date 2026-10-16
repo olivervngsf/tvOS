@@ -1,6 +1,14 @@
-# TV Gallery — starter Apple TV (tvOS) app
+# Find Something to Watch — tvOS prototype
 
-Netflix-style SwiftUI app you drive with the Siri Remote.
+Design challenge: *How might we help someone find something worth watching in under 60 seconds, using only a remote?*
+(60s is our own design target, not an Apple benchmark.)
+
+Three screens only:
+1. **Discover** — "What are you in the mood for?" → Relax / Laugh / Thrill
+2. **Recommendations** — 3 picks for that mood; focused title spelled out below
+3. **Decide** — title, `1h 42m · Comedy · Relaxing`, summary, **Play** (focused) + **More info** (expands in place)
+
+Pressing Play opens a practice player that shows **"Found in Xs · target under 60s"**, a quick way to time each test session.
 
 ## Setup (Mac)
 1. Install Xcode (App Store) and open it once.
@@ -21,7 +29,7 @@ Netflix-style SwiftUI app you drive with the Siri Remote.
 | Click | Enter | Open title / press button |
 | Menu / Back | Esc | Go back / close player |
 | Play/Pause | Space | Play/pause in player |
-| Swipe left/right in player | ←/→ | Seek ∓10s |
+| Swipe left/right in player | ←/→ | Back or forward 10s |
 
 Tip: Simulator → **Window → Show Apple TV Remote** for an on-screen remote.
 
@@ -33,13 +41,9 @@ Tip: Simulator → **Window → Show Apple TV Remote** for an on-screen remote.
 5. Pick the Apple TV as run destination → ⌘R.
 
 ## Code map
-- `TVGallery/App/TVGalleryApp.swift` — tabs: Home / Favorites / Settings
-- `TVGallery/Views/HomeView.swift` — hero banner + scrolling rows
-- `TVGallery/Views/MediaCardView.swift` — focusable card (`.buttonStyle(.card)`)
-- `TVGallery/Views/DetailView.swift` — Play + Favorite buttons
-- `TVGallery/Views/PlayerView.swift` — remote button handling
-- `TVGallery/Models/` — sample data + shared store
-
-## Next steps
-- Replace `ArtworkView` with real images (`AsyncImage`).
-- Swap the fake player for `AVPlayerViewController` / `VideoPlayer`.
+- `TVGallery/Views/DiscoverView.swift` — screen 1
+- `TVGallery/Views/RecommendationsView.swift` — screen 2
+- `TVGallery/Views/DecideView.swift` — screen 3
+- `TVGallery/Views/PlayerView.swift` — practice player + timer badge
+- `TVGallery/Models/Film.swift` — moods + sample films (edit titles here)
+- `TVGallery/Models/SessionClock.swift` — 60s timer
